@@ -1,0 +1,101 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #computer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #monitor {
+    background-color: #1c1c1c;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 0 20px #333;
+  }
+  
+  #screen {
+    background-color: #000;
+    width: 800px; /* Adjust the width as needed */
+    height: 450px; /* Adjust the height as needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  #loading-screen, #terminal {
+    width: 100%;
+    height: 100%;
+    color: #33ff00;
+    font-family: 'Consolas', 'Monaco', monospace;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  #booting-text, #dots {
+    text-align: center;
+  }
+  
+  #terminal {
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+  
+  #output {
+    white-space: pre-wrap;
+    overflow: auto;
+  }
+  
+  .input-line {
+    display: flex;
+  }
+  
+  .prompt {
+    padding-right: 10px;
+  }
+  
+  #command {
+    flex-grow: 1;
+    background-color: #000;
+    color: #33ff00;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  #stand {
+    background-color: #333;
+    height: 50px;
+    width: 100px;
+    margin-top: -5px;
+  }
+  
+  #base {
+    background-color: #333;
+    height: 20px;
+    width: 200px;
+    border-radius: 10px;
+  }
+  
+  /* Responsive design adjustments */
+  @media (max-width: 900px) {
+    #screen {
+      width: 90vw;
+      height: 50.625vw; /* Maintain the aspect ratio of 16:9 */
+    }
+  }
+  
