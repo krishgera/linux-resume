@@ -6,68 +6,90 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  #computer {
+    font-family: 'Consolas', 'Monaco', monospace;
+    color: white;
+}
+
+#wrapper {
+    text-align: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+#introduction {
+    margin-bottom: 20px;
+}
+
+#introduction p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+}
+
+#introduction strong {
+    color: #33ff00;
+}
+
+.hidden {
+    display: none;
+}
+
+#computer {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  #monitor {
+}
+
+#monitor {
     background-color: #1c1c1c;
     border-radius: 12px;
     padding: 12px;
     box-shadow: 0 0 20px #333;
-  }
-  
-  #screen {
+}
+
+#screen {
     background-color: #000;
-    width: 800px; /* Adjust the width as needed */
-    height: 450px; /* Adjust the height as needed */
+    width: 100%;
+    max-width: 800px;
+    height: 450px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     position: relative;
     overflow: hidden;
-  }
-  
-  #loading-screen, #terminal {
+}
+
+#loading-screen, #terminal {
     width: 100%;
     height: 100%;
     color: #33ff00;
-    font-family: 'Consolas', 'Monaco', monospace;
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
-  #booting-text, #dots {
+}
+
+#booting-text, #dots {
     text-align: center;
-  }
-  
-  #terminal {
+}
+
+#terminal {
     padding: 20px;
     box-sizing: border-box;
     overflow-y: auto;
-  }
-  
-  #output {
+}
+
+#output {
     white-space: pre-wrap;
     overflow: auto;
-  }
-  
-  .input-line {
+}
+
+.input-line {
     display: flex;
-  }
-  
-  .prompt {
+}
+
+.prompt {
     padding-right: 10px;
-  }
-  
-  #command {
+}
+
+#command {
     flex-grow: 1;
     background-color: #000;
     color: #33ff00;
@@ -75,27 +97,36 @@ body, html {
     outline: none;
     padding: 0;
     margin: 0;
-  }
-  
-  #stand {
+}
+
+#stand {
     background-color: #333;
     height: 50px;
     width: 100px;
     margin-top: -5px;
-  }
-  
-  #base {
+}
+
+#base {
     background-color: #333;
     height: 20px;
     width: 200px;
     border-radius: 10px;
-  }
-  
-  /* Responsive design adjustments */
-  @media (max-width: 900px) {
-    #screen {
-      width: 90vw;
-      height: 50.625vw; /* Maintain the aspect ratio of 16:9 */
+}
+
+@media (max-width: 768px) {
+    #wrapper {
+        max-width: none;
     }
-  }
-  
+
+    #screen {
+        height: 50vw;
+    }
+
+    #monitor {
+        padding: 6px;
+    }
+
+    #stand, #base {
+        display: none;
+    }
+}
