@@ -8,10 +8,9 @@ window.addEventListener('load', () => {
 
     let currentDirectory = '/';
     const fileSystem = {
-        '/': ['Resume', 'Contact', 'About'],
-        '/Resume': ['CV_KrishGera.pdf'],
-        '/Contact': ['Email.MD', 'Phone.MD'],
-        '/About': ['AboutMe.md']
+        '/': ['Contact', 'About'],
+        '/Contact': [], // Contact details will be handled separately
+        '/About': [] // About details will be handled separately
     };
 
     function updatePrompt() {
@@ -42,8 +41,14 @@ window.addEventListener('load', () => {
 
     bootSequence();
 
-    function displayMessage(message) {
-        output.textContent += `${message}\n`;
+    function displayMessage(message, isHTML = false) {
+        const messageElement = document.createElement('div');
+        if (isHTML) {
+            messageElement.innerHTML = message;
+        } else {
+            messageElement.textContent = message;
+        }
+        output.appendChild(messageElement);
         output.scrollTop = output.scrollHeight;
     }
 
@@ -51,24 +56,14 @@ window.addEventListener('load', () => {
         output.textContent = '';
     }
 
-    function showFile(fileName) {
-        const baseUrl = 'https://krishgera.github.io/';
-
-        if (fileName === 'CV_KrishGera.pdf') {
-            const a = document.createElement('a');
-            a.href = `${baseUrl}${fileName}`;
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            displayMessage('Downloading CV_KrishGera.pdf...');
-        } else if (fileName.endsWith('.MD') || fileName.endsWith('.md')) {
-            fetch(`${baseUrl}${fileName}`)
-                .then(response => response.text())
-                .then(data => displayMessage(data))
-                .catch(error => displayMessage('Error loading file'));
+    function listDirectory() {
+        if (currentDirectory === '/Contact/') {
+            displayMessage('<span style="color: red;">krishgera@outlook.com       +447747151769</span>', true);
+        } else if (currentDirectory === '/About/') {
+            displayMessage('A Computer Science graduate with a talent for discovering and fixing vulnerabilities. Proficient in Python, C++, JavaScript, CSS, C# and React Native.', false);
+            displayMessage('<a href="https://github.com/krishgera" style="color: blue;" target="_blank">Check out my GitHub</a>', true);
         } else {
-            displayMessage('File not found');
+            displayMessage(fileSystem[currentDirectory].join('\n'));
         }
     }
 
@@ -81,7 +76,7 @@ window.addEventListener('load', () => {
         displayMessage(`user@krish:${currentDirectory}$ ${command}`);
 
         if (cmd === 'ls') {
-            displayMessage(fileSystem[currentDirectory].join('\n'));
+            listDirectory();
         } else if (cmd === 'cd') {
             if (!arg || arg === '~') {
                 currentDirectory = '/';
@@ -95,12 +90,6 @@ window.addEventListener('load', () => {
                 displayMessage('Directory not found');
             }
             updatePrompt();
-        } else if (cmd === 'show') {
-            if (fileSystem[currentDirectory].includes(arg)) {
-                showFile(arg);
-            } else {
-                displayMessage('File not found');
-            }
         } else if (cmd === 'clear') {
             clearTerminal();
         } else {
