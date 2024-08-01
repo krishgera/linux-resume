@@ -3,39 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Krish Gera's Interactive Resume</title>
+    <title>Tournament Calculator</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<div id="wrapper">
-    <div id="introduction">
-        <p>Hi, my name is Krish Gera, your favorite Computer Science Engineer.</p>
-        <p>Use <strong>ls</strong> to list directories, <strong>cd</strong> to navigate (and exit the directory) (example : <strong>"cd About"</strong> to go in About directory and <strong>"cd"</strong> to return to the home (krish) directory) and <strong>clear</strong> to clear the terminal.</p>
-    </div>
-
-    <div id="computer">
-        <div id="monitor">
-            <div id="screen">
-                <div id="loading-screen">
-                    <div id="booting-text">System Booting</div>
-                    <div id="dots"></div>
-                </div>
-
-                <div id="terminal" class="hidden">
-                    <div id="output"></div>
-                    <div id="input-line" class="input-line">
-                        <div id="prompt" class="prompt">user@krish:~$</div>
-                        <input id="command" type="text" autofocus>
-                    </div>
-                </div>
+    <header>
+        <h1>Tournament Calculator</h1>
+        <nav>
+            <a href="#fifa">FIFA Tournament</a>
+            <a href="#rocket-league">Rocket League Tournament</a>
+        </nav>
+    </header>
+    <main>
+        <section id="fifa">
+            <h2>FIFA Tournament</h2>
+            <form id="fifa-setup">
+                <label for="fifa-players">Enter Player Names (Comma Separated):</label>
+                <input type="text" id="fifa-players" name="fifa-players" placeholder="Player1, Player2, Player3, ...">
+                <button type="button" onclick="startFifaTournament()">Start Tournament</button>
+            </form>
+            <div id="fifa-matches">
+                <h3>Matches</h3>
+                <div id="fifa-match-list"></div>
             </div>
-        </div>
-        <div id="stand"></div>
-        <div id="base"></div>
-    </div>
-</div>
-
-<script src="script.js"></script>
+            <div id="fifa-leaderboard">
+                <h3>Leaderboard</h3>
+                <table id="fifa-leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Player</th>
+                            <th>Points</th>
+                            <th>Game Difference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Leaderboard rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section id="rocket-league">
+            <h2>Rocket League Tournament</h2>
+            <form id="rocket-league-setup">
+                <label for="rocket-players">Enter Player Names (Comma Separated):</label>
+                <input type="text" id="rocket-players" name="rocket-players" placeholder="Player1, Player2, Player3, ...">
+                <button type="button" onclick="startRocketLeagueTournament()">Start Tournament</button>
+            </form>
+            <div id="rocket-league-matches">
+                <h3>Matches</h3>
+                <div id="rocket-league-match-list"></div>
+            </div>
+            <div id="rocket-league-leaderboard">
+                <h3>Leaderboard</h3>
+                <table id="rocket-league-leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Player</th>
+                            <th>Points</th>
+                            <th>Game Difference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Leaderboard rows will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>© 2024 Tournament Calculator</p>
+    </footer>
+    <script src="script.js"></script>
 </body>
 </html>

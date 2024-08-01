@@ -1,105 +1,142 @@
-window.addEventListener('load', () => {
-    const loadingScreen = document.getElementById('loading-screen');
-    const terminal = document.getElementById('terminal');
-    const introduction = document.getElementById('introduction');
-    const output = document.getElementById('output');
-    const commandInput = document.getElementById('command');
-    const prompt = document.getElementById('prompt');
-
-    let currentDirectory = '/';
-    const fileSystem = {
-        '/': ['Contact', 'About'],
-        '/Contact': [], // Contact details will be handled separately
-        '/About': [] // About details will be handled separately
-    };
-
-    function updatePrompt() {
-        prompt.textContent = `user@krish:${currentDirectory}$ `;
-    }
-
-    function bootSequence() {
-        let dots = '';
-        const maxDots = 5;
-        const dotsElement = document.getElementById('dots');
-        const bootText = document.getElementById('booting-text');
-
-        bootText.textContent = 'System Booting';
-
-        const dotInterval = setInterval(() => {
-            if (dots.length >= maxDots) {
-                clearInterval(dotInterval);
-                loadingScreen.classList.add('hidden');
-                terminal.classList.remove('hidden');
-                introduction.classList.remove('hidden');
-                commandInput.focus();
-            } else {
-                dots += '.';
-                dotsElement.textContent = dots;
-            }
-        }, 500);
-    }
-
-    bootSequence();
-
-    function displayMessage(message, isHTML = false) {
-        const messageElement = document.createElement('div');
-        if (isHTML) {
-            messageElement.innerHTML = message;
-        } else {
-            messageElement.textContent = message;
-        }
-        output.appendChild(messageElement);
-        output.scrollTop = output.scrollHeight;
-    }
-
-    function clearTerminal() {
-        output.textContent = '';
-    }
-
-    function listDirectory() {
-        if (currentDirectory === '/Contact/') {
-            displayMessage('<span style="color: red;">krishgera@outlook.com       +447747151769</span>', true);
-        } else if (currentDirectory === '/About/') {
-            displayMessage('A Computer Science graduate with a talent for discovering and fixing vulnerabilities. Proficient in Python, C++, JavaScript, CSS, C# and React Native.', false);
-            displayMessage('<a href="https://github.com/krishgera" style="color: blue;" target="_blank">Check out my GitHub</a>', true);
-        } else {
-            displayMessage(fileSystem[currentDirectory].join('\n'));
-        }
-    }
-
-    function executeCommand(command) {
-        commandInput.value = '';
-        let parts = command.trim().split(' ');
-        let cmd = parts[0].toLowerCase();
-        let arg = parts.slice(1).join(' ');
-
-        displayMessage(`user@krish:${currentDirectory}$ ${command}`);
-
-        if (cmd === 'ls') {
-            listDirectory();
-        } else if (cmd === 'cd') {
-            if (!arg || arg === '~') {
-                currentDirectory = '/';
-            } else if (arg === '..') {
-                let pathParts = currentDirectory.trim().split('/');
-                pathParts.pop();
-                currentDirectory = pathParts.join('/') || '/';
-            } else if (Object.keys(fileSystem).includes(currentDirectory + arg)) {
-                currentDirectory += arg + '/';
-            } else {
-                displayMessage('Directory not found');
-            }
-            updatePrompt();
-        } else if (cmd === 'clear') {
-            clearTerminal();
-        } else {
-            displayMessage('Command not found');
-        }
-    }
-
-    commandInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') {
-            executeCommand(this.value);
-        }
+// Utility function to initialize players
+function initializePlayers(playerNames) {
+    const players = {};
+    playerNames.forEach(player => {
+        players[player] = { points: 0, difference: 0 };
     });
-});
+    return players;
+}
+
+// Start FIFA Tournament
+function startFifaTournament() {
+    const playerNames = document.getElementById('fifa-players').value.split(',').map(name => name.trim());
+    if (playerNames.length !== 8) {
+        alert('Please enter exactly 8 player names.');
+        return;
+    }
+    localStorage.setItem('fifaPlayers', JSON.stringify(initializePlayers(playerNames)));
+    generateFifaMatches(playerNames);
+    updateFifaLeaderboard();
+}
+
+// Generate FIFA Matches
+function generateFifaMatches(playerNames) {
+    const matchesContainer = document.getElementById('fifa-match-list');
+    matchesContainer.innerHTML = '';
+    let matchNumber = 1;
+    for (let i = 0; i < playerNames.length; i++) {
+        for (let j = i + 1; j < playerNames.length; j++) {
+            matchesContainer.innerHTML += `
+                <div class="match">
+                    <p>Match #${matchNumber}: ${playerNames[i]} vs ${playerNames[j]}</p>
+                    <select onchange="updateFifaResult('${playerNames[i]}', '${playerNames[j]}', this.value)">
+                        <option value="">Select Winner</option>
+                        <option value="${playerNames[i]}">${playerNames[i]}</option>
+                        <option value="${playerNames[j]}">${playerNames[j]}</option>
+                    </select>
+                </div>
+            `;
+            matchNumber++;
+        }
+    }
+}
+
+// Update FIFA Result
+function updateFifaResult(player1, player2, winner) {
+    const players = JSON.parse(localStorage.getItem('fifaPlayers'));
+    if (winner === player1) {
+        players[player1].points += 1;
+        players[player1].difference += 1;
+        players[player2].difference -= 1;
+    } else if (winner === player2) {
+        players[player2].points += 1;
+        players[player2].difference += 1;
+        players[player1].difference -= 1;
+    }
+    localStorage.setItem('fifaPlayers', JSON.stringify(players));
+    updateFifaLeaderboard();
+}
+
+// Update FIFA Leaderboard
+function updateFifaLeaderboard() {
+    const leaderboardTable = document.getElementById('fifa-leaderboard-table').querySelector('tbody');
+    const players = JSON.parse(localStorage.getItem('fifaPlayers'));
+    const playerNames = Object.keys(players).sort((a, b) => players[b].points - players[a].points || players[b].difference - players[a].difference);
+    leaderboardTable.innerHTML = '';
+    playerNames.forEach(player => {
+        leaderboardTable.innerHTML += `
+            <tr>
+                <td>${player}</td>
+                <td>${players[player].points}</td>
+                <td>${players[player].difference}</td>
+            </tr>
+        `;
+    });
+}
+
+// Start Rocket League Tournament
+function startRocketLeagueTournament() {
+    const playerNames = document.getElementById('rocket-players').value.split(',').map(name => name.trim());
+    if (playerNames.length !== 8) {
+        alert('Please enter exactly 8 player names.');
+        return;
+    }
+    localStorage.setItem('rocketLeaguePlayers', JSON.stringify(initializePlayers(playerNames)));
+    generateRocketLeagueMatches(playerNames);
+    updateRocketLeagueLeaderboard();
+}
+
+// Generate Rocket League Matches
+function generateRocketLeagueMatches(playerNames) {
+    const matchesContainer = document.getElementById('rocket-league-match-list');
+    matchesContainer.innerHTML = '';
+    let matchNumber = 1;
+    for (let i = 0; i < playerNames.length; i++) {
+        for (let j = i + 1; j < playerNames.length; j++) {
+            matchesContainer.innerHTML += `
+                <div class="match">
+                    <p>Match #${matchNumber}: ${playerNames[i]} vs ${playerNames[j]}</p>
+                    <select onchange="updateRocketLeagueResult('${playerNames[i]}', '${playerNames[j]}', this.value)">
+                        <option value="">Select Winner</option>
+                        <option value="${playerNames[i]}">${playerNames[i]}</option>
+                        <option value="${playerNames[j]}">${playerNames[j]}</option>
+                    </select>
+                </div>
+            `;
+            matchNumber++;
+        }
+    }
+}
+
+// Update Rocket League Result
+function updateRocketLeagueResult(player1, player2, winner) {
+    const players = JSON.parse(localStorage.getItem('rocketLeaguePlayers'));
+    if (winner === player1) {
+        players[player1].points += 1;
+        players[player1].difference += 1;
+        players[player2].difference -= 1;
+    } else if (winner === player2) {
+        players[player2].points += 1;
+        players[player2].difference += 1;
+        players[player1].difference -= 1;
+    }
+    localStorage.setItem('rocketLeaguePlayers', JSON.stringify(players));
+    updateRocketLeagueLeaderboard();
+}
+
+// Update Rocket League Leaderboard
+function updateRocketLeagueLeaderboard() {
+    const leaderboardTable = document.getElementById('rocket-league-leaderboard-table').querySelector('tbody');
+    const players = JSON.parse(localStorage.getItem('rocketLeaguePlayers'));
+    const playerNames = Object.keys(players).sort((a, b) => players[b].points - players[a].points || players[b].difference - players[a].difference);
+    leaderboardTable.innerHTML = '';
+    playerNames.forEach(player => {
+        leaderboardTable.innerHTML += `
+            <tr>
+                <td>${player}</td>
+                <td>${players[player].points}</td>
+                <td>${players[player].difference}</td>
+            </tr>
+        `;
+    });
+}
